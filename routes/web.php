@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
 
-  Route::get('/admin', 'Admin\IndexController@index')->name('index');
+  Route::get('/admin', 'Admin\IndexController@index')->name('admin');
+  Route::resource('/admin/products', 'Admin\ProductController');
 
 });
 

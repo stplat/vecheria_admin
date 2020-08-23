@@ -15,7 +15,8 @@ import VtTables from './plugins/VtTables';
 import Union from './plugins/Unicon';
 
 /* Components */
-
+Vue.component('product', require('./components/Product').default);
+Vue.component('popup', require('./components/Popup').default);
 
 const app = new Vue({
   el: '#app',
