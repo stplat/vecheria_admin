@@ -1,0 +1,28 @@
+/* Базовые кнопки у bootstrap */
+
+.btn-primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+
+  .no-touchevents &:hover {
+    color: #fff;
+    background-color: #0069d9;
+    border-color: #0062cc;
+  }
+
+  &:active {
+    color: #fff;
+    background-color: #0062cc;
+    border-color: #005cbf;
+  }
+
+  &:not(:disabled):not(.disabled):active,
+  &:not(:disabled):not(.disabled).active,
+  .show > &.dropdown-toggle,
+  &:focus {
+    color: #fff;
+    background-color: #0062cc;
+    border-color: #005cbf;
+  }
+}
