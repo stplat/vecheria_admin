@@ -47,7 +47,14 @@
       products: {
         type: Array,
         required: true
+      },
+      categories: {
+        type: Array,
+        required: true
       }
+    },
+    mounted() {
+      this.$store.commit('Product/setCategories', this.categories);
     },
     computed: {
       table() {
