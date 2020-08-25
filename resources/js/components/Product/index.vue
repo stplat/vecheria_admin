@@ -4,7 +4,7 @@
       <!--          <alert :className="result.className" v-show="result.show">Пользователь <strong>{{ result.name }}</strong> успешно {{ result.text }}!</alert>-->
       <div class="card mb-1">
         <h4 class="card-header">Список продукции</h4>
-        <div class="card-body">
+        <div class="card-body product">
           <v-client-table :data="table.data" :columns="table.columns" :options="table.options">
             <template v-slot:afterLimit>
               <button class="btn btn-success" @click="modal.create.show = true">Добавить</button>
@@ -38,7 +38,7 @@
       return {
         modal: {
           create: {
-            show: false,
+            show: false
           }
         }
       }
@@ -89,3 +89,18 @@
     }
   }
 </script>
+
+<style lang="scss">
+  .product .VueTables__table {
+    table-layout: fixed;
+
+    thead tr th:nth-child(1) {
+      width: 70px;
+    }
+
+    thead tr th:nth-child(2) {
+      width: 115px;
+    }
+  }
+
+</style>

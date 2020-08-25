@@ -25,7 +25,7 @@ class ProductController extends Controller
    */
   public function index()
   {
-//    dd($this->productService->getProduct(1)->toArray());
+//    dd($this->productService->getProducts()->toArray());
     return view('admin/product')->with([
       'products' => $this->productService->getProducts(),
       'categories' => $this->productService->getCategories()
@@ -39,14 +39,16 @@ class ProductController extends Controller
    */
   public function create()
   {
-    //
+    return view('admin/product-create')->with([
+      'categories' => $this->productService->getCategories()
+    ]);
   }
 
   /**
    * Store a newly created resource in storage.
    *
    * @param \App\Http\Requests\Admin\ProductStore
-   *  @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
+   * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
    */
   public function store(ProductStore $request)
   {
