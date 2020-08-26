@@ -5,7 +5,9 @@
       <div class="form-group mb-0">
         <ul class="form-image">
           <li class="form-image__item" v-for="(file, key) in files" :key="key">
-            <div class="form-image__remove"><unicon name="times" width="18px" fill="red"/></div>
+            <div class="form-image__remove">
+              <unicon name="times" width="18px" fill="red"/>
+            </div>
             <img :src="file.tempSrc" alt="" ref="img">
           </li>
           <li class="form-image__upload">
@@ -18,6 +20,8 @@
   </div>
 </template>
 <script>
+  import axios from 'axios';
+
   export default {
     data() {
       return {
@@ -42,16 +46,9 @@
         let type = 0;
 
         const allowFormat = [
-          'text/csv',
-          'text/plain',
-          'application/csv',
-          'text/comma-separated-values',
-          'application/excel',
-          'application/vnd.ms-excel',
-          'application/vnd.msexcel',
-          'text/anytext',
-          'application/octet-stream',
-          'application/txt'
+          'image/png',
+          'image/jpg',
+          'image/jpeg'
         ].findIndex(item => item === file.type);
 
         file === '' ? errors.push('Поле <strong>Файл для импорта</strong> обязательно для заполнения') :
@@ -65,13 +62,23 @@
       /* Событие изменения (загрузки) файла */
       changeFile(e) {
         const files = e.target.files;
-console.log(files);
+
         this.files = [...files].map(item => {
           return {
             file: item,
             tempSrc: URL.createObjectURL(item)
           }
         });
+
+        const formData = new FormData();
+        // formData.append('file', files);
+        for (let param in files) {
+          if (files.hasOwnProperty(param)) {
+            formData.append('file['+ param +']', files[param]);
+          }
+        }
+        axios.post('/admin/products', formData).then(res => console.log(res));
+
       }
     }
   }
