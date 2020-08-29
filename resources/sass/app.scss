@@ -2,6 +2,8 @@
 @import "~normalize.css/normalize.css";
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
+// Preloader
+@import "~spinkit/spinkit.min.css";
 // Variables
 @import 'variables';
 // Bootstrap
@@ -22,6 +24,7 @@
 @import 'login-dropdown';
 @import 'menu';
 @import 'popup';
+@import 'preloader';
 @import 'tabs';
 
 

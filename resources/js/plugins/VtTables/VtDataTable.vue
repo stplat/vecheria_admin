@@ -1,48 +1,3 @@
-<style lang="scss">
-  .table-responsive {
-    overflow-x: visible !important;
-  }
-
-  .VueTables__table {
-    overflow: auto !important;
-  }
-
-  .VueTables__row td {
-    max-width: 300px;
-    vertical-align: middle !important;
-
-    .vuetable__icons {
-      display: flex;
-      margin: 0 -2px;
-
-      a {
-        padding: 3px;
-        margin: 0 2px;
-      }
-    }
-  }
-
-  .VueTables__search,
-  .VueTables__limit {
-    display: inline-flex;
-  }
-
-  .VueTables__search {
-    margin-left: auto;
-  }
-
-  .VueTables__search-field,
-  .VueTables__limit-field {
-    display: flex;
-    white-space: nowrap;
-    align-items: center;
-
-    & > label {
-      margin: 0 10px 0 0 !important;
-    }
-  }
-</style>
-
 <template>
 
   <div :class="`VueTables VueTables--${props.source}`" slot-scope="props">
@@ -53,8 +8,8 @@
           <div :class="`${props.theme.field} VueTables__limit`">
             <template v-if="props.opts._data.length >= 1">
               <vnodes :vnodes="props.slots.beforeLimit"/>
-              <vt-per-page-selector class="mr-3"/>
-              <button class="btn btn-primary mr-3" @click="download" v-if="props.opts._data && props.opts.isNeedDownloadButton === undefined">Экспорт</button>
+              <vt-per-page-selector class="mr-3" v-if="props.opts._data.length > 10"/>
+              <button class="btn btn-outline-primary mr-3" @click="download" v-if="props.opts._data && props.opts.isNeedDownloadButton === undefined">Экспорт</button>
             </template>
             <vnodes :vnodes="props.slots.afterLimit"/>
           </div>
@@ -132,3 +87,59 @@
     }
   }
 </script>
+<style lang="scss">
+  .table-responsive {
+    overflow-x: auto;
+
+    table {
+      min-width: 750px;
+    }
+  }
+
+  .VueTables.VueTables--client {
+  }
+
+  .VueTables__table {
+    overflow: auto !important;
+  }
+
+  .VueTables__row td {
+    max-width: 300px;
+    vertical-align: middle !important;
+    cursor: default;
+
+    .vuetable__icons {
+      display: flex;
+      margin: 0 -2px;
+
+      a {
+        padding: 3px;
+        margin: 0 2px;
+      }
+    }
+  }
+
+  .VueTables__search,
+  .VueTables__limit {
+    display: inline-flex;
+  }
+
+  .VueTables__search {
+    margin-left: auto;
+  }
+
+  .VueTables__search-field,
+  .VueTables__limit-field {
+    display: flex;
+    white-space: nowrap;
+    align-items: center;
+
+    & > label {
+      margin: 0 10px 0 0 !important;
+    }
+  }
+
+  .VuePagination__pagination {
+    display: inline-flex;
+  }
+</style>

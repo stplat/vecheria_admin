@@ -1,9 +1,4 @@
 /* Базовые кнопки у bootstrap */
-.btn {
-  display: inline-flex;
-  align-items: center;
-}
-
 .btn-primary {
   color: #fff;
   background-color: #007bff;
@@ -24,6 +19,11 @@
     background-color: #0062cc;
     border-color: #005cbf;
   }
+}
+
+.btn-outline-primary {
+  font-weight: 500;
+  border: 2px solid;
 }
 
 .btn-success {

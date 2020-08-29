@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Admin;
 
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
@@ -32,7 +32,7 @@ class ProductService
    */
   public function getProducts()
   {
-    return Product::with('categories')->get();
+    return Product::with('categories')->orderBy('product_id')->get();
   }
 
   /**
@@ -43,30 +43,33 @@ class ProductService
    */
   public function getCategories()
   {
-    return Category::all();
+    return Category::orderBy('category_id')->get();
   }
 
   /**
    * Сохраняем фото и возвращаем названия
    *
+   * @param $files array
    * @param $name string
    * @return boolean
    */
-  public function storeImage($name)
+  public function storeImage($files, $name)
   {
     $path = [];
 
-    foreach (request('file') as $key => $file) {
+    foreach ($files as $key => $file) {
       $name = $key > 0 ? $name . '_' . ($key + 1) : $name;
-      $temp = Storage::disk('local')->putFile('public/images/items', $file);
+      if (!is_string($file)) {
+        $temp = Storage::putFile('public/images/items', $file);
 
-      $this->resizeImage($temp, $name, 'medium', null, 380);
-      $this->resizeImage($temp, $name, 'small', null, 120);
-      $this->resizeImage($temp, $name, 'thumb', 78, 78);
-      $resultPath = $this->resizeImage($temp, $name);
+        $this->resizeImage($temp, $name, 'medium', null, 380);
+        $this->resizeImage($temp, $name, 'small', null, 120);
+        $this->resizeImage($temp, $name, 'thumb', 78, 78);
+        $resultPath = $this->resizeImage($temp, $name);
 
-      Storage::delete($temp);
-      array_push($path, $resultPath);
+        Storage::delete($temp);
+        array_push($path, $resultPath);
+      }
     }
 
     return implode(';', $path);

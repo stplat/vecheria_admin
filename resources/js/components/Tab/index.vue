@@ -8,6 +8,7 @@
       </label>
     </div>
     <div class="tab__body">
+      <preloader v-if="isLoading"></preloader>
       <ul class="tab__screens">
         <li class="tab__screen" :class="{'is-active': tab.slot === currentTab}" v-for="(tab, key) in tabs" :key="key">
           <slot :name="tab.slot"></slot>
@@ -32,6 +33,10 @@
         type: String,
         required: false,
       },
+      isLoading: {
+        type: Boolean,
+        default: false
+      }
     },
     mounted() {
       this.defaultTab ? this.currentTab = this.defaultTab : this.currentTab = this.tabs[0].slot;

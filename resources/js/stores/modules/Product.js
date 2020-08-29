@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { serialize } from '../../mixins/helpers';
 
 export default {
   namespaced: true,
@@ -26,14 +27,38 @@ export default {
     // manufacturer, material, technic, comment, description, video, image_path, similar_product_id
     // } = payload;
     async createProduct({ commit }, payload) {
-      const res = await axios.post(this.state.requestPath + '/admin/products', payload).catch(err => console.log('In product/createProduct - ' + err));
-      console.log(res)
+      const formData = new FormData();
+      for (let param in payload) {
+        if (payload.hasOwnProperty(param)) {
+          if (param === 'files') {
+            for (let file in payload['files']) {
+              if (payload['files'].hasOwnProperty(file)) {
+                formData.append('files[' + file + ']', payload[param][file]);
+              }
+            }
+          } else if (param === 'categories') {
+            payload['categories'].forEach((item, key) => {
+              formData.append('categories[' + key + ']', item);
+            });
+          } else if (param === 'similar_product') {
+            payload['similar_product'].forEach((item, key) => {
+              formData.append('similar_product[' + key + ']', item);
+            });
+          } else {
+            formData.append(param, payload[param]);
+          }
+        }
+      }
+
+      const res = await axios.post(this.state.requestPath + '/admin/products', formData).catch(err => console.log('In product/createProduct - ' + err));
+
       if (!res.data.errors) {
         commit('setProducts', res.data);
         return res.data;
       } else {
         return { errors: Object.values(res.data.errors).map(item => item[0]) };
       }
+
     }
 
   },

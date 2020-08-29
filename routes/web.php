@@ -18,6 +18,8 @@ Route::middleware('auth')->group(function () {
   Route::get('/admin', 'Admin\IndexController@index')->name('admin');
   Route::resource('/admin/products', 'Admin\ProductController');
 
+  /* Таблицы vue-table-2 (экспорт) */
+  Route::post('/table/export', 'TableController@export')->name('table-export');
 });
 
 Route::get('/admin/login', 'Auth\LoginController@showLoginForm')->name('login');

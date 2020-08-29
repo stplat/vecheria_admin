@@ -7,7 +7,7 @@
         <div class="card-body product">
           <v-client-table :data="table.data" :columns="table.columns" :options="table.options">
             <template v-slot:afterLimit>
-              <button class="btn btn-success" @click="modal.create.show = true">Добавить</button>
+              <a :href="assetBase + '/products/create'" class="btn btn-primary">Добавить</a>
             </template>
             <template v-slot:actions="props">
               <a class="fa fa-edit" href="" @click.prevent="modal.edit.show = true; modal.edit.id = props.row.id">
@@ -55,6 +55,7 @@
     },
     mounted() {
       this.$store.commit('Product/setCategories', this.categories);
+      this.$store.commit('Product/setProducts', this.products);
     },
     computed: {
       table() {
@@ -71,7 +72,7 @@
           actions: 'Действия'
         };
 
-        const data = this.products.map((product, i) => ( {
+        const data = this.$store.getters['Product/getProducts'].map((product, i) => ( {
           key: i + 1,
           article: product.article,
           name: product.name,

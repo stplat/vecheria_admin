@@ -34,13 +34,13 @@ class ProductStore extends FormRequest
   public function rules()
   {
     return [
-      'category_id' => ['required'],
+      'categories' => ['required'],
       'name' => ['required'],
       'manufacturer' => ['required'],
-      'article' => ['required'],
-//      'meta_keywords' => [],
-//      'meta_description' => [],
-//      'meta_title' => [],
+      'article' => ['required', 'unique:product,article'],
+      'meta_keywords' => ['required'],
+      'meta_description' => ['required'],
+      'meta_title' => ['required'],
       'available' => ['required'],
 //      'weight' => [],
       'price' => ['required'],
@@ -50,7 +50,7 @@ class ProductStore extends FormRequest
       'technic' => ['required'],
 //      'description' => [],
 //      'video ' => [],
-      'image_path' => ['required'],
+      'files' => ['required'],
     ];
   }
 
@@ -62,15 +62,19 @@ class ProductStore extends FormRequest
   public function messages()
   {
     return [
-      'category_id.required' => 'Поле <strong>Категория</strong> обязательно для заполнения',
+      'categories.required' => 'Поле <strong>Категория</strong> обязательно для заполнения',
       'name.required' => 'Поле <strong>Название</strong> обязательно для заполнения',
       'manufacturer.required' => 'Поле <strong>Производитель</strong> обязательно для заполнения',
       'article.required' => 'Поле <strong>Артикул</strong> обязательно для заполнения',
+      'article.unique' => 'Товар с таким <strong>Артикулом</strong> уже существует',
       'available.required' => 'Поле <strong>Наличие</strong> обязательно для заполнения',
       'price.required' => 'Поле <strong>Цена</strong> обязательно для заполнения',
       'material.required' => 'Поле <strong>Материал</strong> обязательно для заполнения',
       'technic.required' => 'Поле <strong>Техника</strong> обязательно для заполнения',
-      'image_path.required' => 'Поле <strong>Фотография</strong> обязательно для заполнения',
+      'files.required' => 'Поле <strong>Фотография</strong> обязательно для заполнения',
+      'meta_keywords.required' => 'Поле <strong>Мета keywords</strong> обязательно для заполнения',
+      'meta_description.required' => 'Поле <strong>Мета description</strong> обязательно для заполнения',
+      'meta_title.required' => 'Поле <strong>Мета title</strong> обязательно для заполнения',
     ];
   }
 

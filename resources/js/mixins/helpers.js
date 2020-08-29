@@ -18,5 +18,25 @@ export default {
 
       return `${ hours }:${ minutes }`;
     }
+  },
+  directives: {
+    'prevent-number': {
+      bind(el, binding) {
+        const inputHandler = function(e) {
+          var ch = String.fromCharCode(e.which);
+          var re = new RegExp(/[A-Za-zА-Яа-яЁё]/);
+          if (ch.match(re)) {
+            e.preventDefault();
+          }
+        };
+        el.addEventListener('keypress', inputHandler);
+      }
+    }
   }
-}
+};
+
+export function serialize(array, name) {
+  return array.reduce((item, carry) => {
+    return `${String(item)}&${name}[]=${String(carry)}`;
+  }, '').replace("&", "");
+};

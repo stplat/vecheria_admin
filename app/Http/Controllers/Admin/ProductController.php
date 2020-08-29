@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 
-use App\Services\ProductService;
+use App\Services\Admin\ProductService;
 use App\Http\Requests\Admin\ProductStore;
 use App\Models\Product;
 
@@ -38,9 +38,8 @@ class ProductController extends Controller
    */
   public function create()
   {
-
-
     return view('admin/product-create')->with([
+      'products' => $this->productService->getProducts(),
       'categories' => $this->productService->getCategories()
     ]);
   }
@@ -51,34 +50,33 @@ class ProductController extends Controller
    * @param \App\Http\Requests\Admin\ProductStore
    * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
    */
-  public function store()
+  public function store(ProductStore $request)
   {
-    $name = TransliterationHelper('привет медвед 0854-56.5 с cv');
-    return $this->productService->storeImage($name);
+    $slug = TransliterationHelper($request->input('name') . "-" . $request->input('article'));
 
-    //    Product::create([
-//      'name' => $request->input('name'),
-//      'slug' => 'blalbla',
-//      'category_id' => '1',
-//      'manufacturer' => $request->input('manufacturer'),
-//      'article' => $request->input('article'),
-//      'meta_keywords' => $request->input('meta_keywords'),
-//      'meta_description' => $request->input('meta_description'),
-//      'meta_title' => $request->input('meta_title'),
-//      'available' => $request->input('available'),
-//      'weight' => $request->input('weight'),
-//      'price' => $request->input('price'),
-//      'dimension' => $request->input('dimension'),
-//      'comment' => $request->input('comment'),
-//      'material' => $request->input('material'),
-//      'technic' => $request->input('technic'),
-//      'description' => $request->input('description'),
-//      'video' => $request->input('video'),
-//      'image_path' => $request->input('image_path'),
-//      'similar_product_id' => implode(';', $request->input('similar_product_id')),
-//    ])->categories()->attach($request->input('category_id'));
-//
-//    return $this->productService->getProducts();
+    Product::create([
+      'name' => $request->input('name'),
+      'slug' => $slug,
+      'category_id' => '1',
+      'manufacturer' => $request->input('manufacturer'),
+      'article' => $request->input('article'),
+      'meta_keywords' => $request->input('meta_keywords'),
+      'meta_description' => $request->input('meta_description'),
+      'meta_title' => $request->input('meta_title'),
+      'available' => $request->input('available'),
+      'weight' => $request->input('weight'),
+      'price' => $request->input('price'),
+      'dimension' => $request->input('dimension'),
+      'comment' => $request->input('comment'),
+      'material' => $request->input('material'),
+      'technic' => $request->input('technic'),
+      'description' => $request->input('description'),
+      'video' => $request->input('video'),
+      'image_path' => $this->productService->storeImage($request->file('files'), $slug),
+      'similar_product_id' => $request->input('similar_product') ? implode(';', $request->input('similar_product')) : '',
+    ])->categories()->attach($request->input('categories'));
+
+    return $this->productService->getProducts();
   }
 
   /**
