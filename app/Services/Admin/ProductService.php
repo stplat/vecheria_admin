@@ -107,6 +107,6 @@ class ProductService
       : imagecreatefromjpeg($path . $extension);
     imagewebp($img, $path . 'webp', 100);
 
-    return "storage/images/items/$name.$extension";
+    return "/storage/images/items/$name.$extension";
   }
 }

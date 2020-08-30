@@ -31,6 +31,10 @@ class ProductController extends Controller
     ]);
   }
 
+  public function categories() {
+    return $this->productService->getCategories();
+  }
+
   /**
    * Show the form for creating a new resource.
    *
@@ -98,7 +102,11 @@ class ProductController extends Controller
    */
   public function edit($id)
   {
-    //
+    return view('admin/product-edit')->with([
+      'products' => $this->productService->getProducts(),
+      'product' => $this->productService->getProduct($id),
+      'categories' => $this->productService->getCategories()
+    ]);
   }
 
   /**
@@ -108,9 +116,12 @@ class ProductController extends Controller
    * @param int $id
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, $id)
+  public function update()
   {
-    //
+//    $content = ob_get_contents();
+//    return request()->getContent();
+//    return request()->file('files');
+    return $this->productService->storeImage(request()->file('files'), 'asdasqwe123vxcv');
   }
 
   /**

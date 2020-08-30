@@ -9,10 +9,16 @@ export default {
     categories: []
   },
   actions: {
+    /* Получение списка категорий */
+    async updateCategories({ commit }, payload) {
+      const res = await axios.get(this.state.requestPath + '/admin/products/categories').catch(err => console.log('In product/updateCategories - ' + err));
+      return !res.data.errors ? res.data : { errors: Object.values(res.data.errors).map(item => item[0]) };
+    },
+
     /* Получение товара */
     async updateProduct({ commit }, payload) {
       let { id } = payload;
-      const res = await axios.get(this.state.requestPath + '/users/' + id).catch(err => console.log('In user/updateProduct - ' + err));
+      const res = await axios.get(this.state.requestPath + '/admin/products/' + id).catch(err => console.log('In product/updateProduct - ' + err));
 
       if (!res.data.errors) {
         commit('setProduct', res.data);
@@ -22,10 +28,6 @@ export default {
       }
     },
     /* Создание пользователя */
-    // let {
-    // category_id, meta_keywords, meta_description, meta_title, article, name, available, price, weight, dimensions,
-    // manufacturer, material, technic, comment, description, video, image_path, similar_product_id
-    // } = payload;
     async createProduct({ commit }, payload) {
       const formData = new FormData();
       for (let param in payload) {
@@ -58,9 +60,41 @@ export default {
       } else {
         return { errors: Object.values(res.data.errors).map(item => item[0]) };
       }
-
+    },
+    /* Редактирование пользователя */
+    async editProduct({ commit }, payload) {
+      const formData = new FormData();
+      for (let param in payload) {
+        if (payload.hasOwnProperty(param)) {
+          if (param === 'files') {
+            for (let file in payload['files']) {
+              if (payload['files'].hasOwnProperty(file)) {
+                formData.append('files[' + file + ']', payload[param][file]);
+              }
+            }
+          } else if (param === 'categories') {
+            payload['categories'].forEach((item, key) => {
+              formData.append('categories[' + key + ']', item);
+            });
+          } else if (param === 'similar_product') {
+            payload['similar_product'].forEach((item, key) => {
+              formData.append('similar_product[' + key + ']', item);
+            });
+          } else {
+            formData.append(param, payload[param]);
+          }
+        }
+      }
+      const res = await axios.post(this.state.requestPath + '/admin/products/update', formData).catch(err => console.log('In product/editProduct - ' + err));
+      // const res = await axios.put(this.state.requestPath + '/admin/products/update', payload.files).catch(err => console.log('In product/editProduct - ' + err));
+      console.log(res)
+      // if (!res.data.errors) {
+      //   commit('setProducts', res.data);
+      //   return res.data;
+      // } else {
+      //   return { errors: Object.values(res.data.errors).map(item => item[0]) };
+      // }
     }
-
   },
   mutations: {
     setProduct: (state, obj) => state.product = obj,

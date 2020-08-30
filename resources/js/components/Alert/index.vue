@@ -1,33 +1,52 @@
 <template>
-  <transition name="alert-list" mode="out-in">
-    <div class="alert" v-if="show" :class="'alert-' + className" role="alert">
-      <slot></slot>
-    </div>
-  </transition>
+  <!--  <transition name="alert-list" mode="out-in">-->
+  <!--    <div class="alert" v-if="show" :class="'alert-' + className" role="alert">-->
+  <!--      <slot></slot>-->
+  <!--    </div>-->
+  <!--  </transition>-->
+  <transition-group tag="ul" name="alert-list" mode="out-in">
+    <li class="alert" v-for="error in errors"
+        :key="error.id"
+        :class="error.hasOwnProperty('className') ? 'alert-' + error.className : 'alert-danger'"
+        v-html="error.html">
+    </li>
+  </transition-group>
 </template>
 
 <script>
   export default {
     data() {
       return {
-        show: false,
         timer: 0
       }
     },
     props: {
-      className: {
-        type: String,
-        required: false,
-        default: 'danger'
+      errors: {
+        type: Array,
+        required: true
       },
+      time: {
+        type: [Number, String],
+        required: false
+      }
     },
-    created() {
-      setTimeout(() => this.show = true, 100);
-    },
+    watch: {
+      errors() {
+        if (this.time) {
+          this.timer = setTimeout(() => console.log('asd'), this.time)
+        }
+      }
+    }
   }
 </script>
 
 <style lang="scss" scoped>
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
   .list-enter-active, .list-leave-active,
   .alert-list-enter-active, .alert-list-leave-active {
     transition: all 0.1s;

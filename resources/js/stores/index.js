@@ -11,7 +11,7 @@ export default new Vuex.Store({
     Product
   },
   state: {
-    // requestPath: 'http://lkstops3.optimagp66.ru'
+    // requestPath: 'http://vecheriaadmin.loc'
     requestPath: '',
   }
 });

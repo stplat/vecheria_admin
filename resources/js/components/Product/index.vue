@@ -7,41 +7,29 @@
         <div class="card-body product">
           <v-client-table :data="table.data" :columns="table.columns" :options="table.options">
             <template v-slot:afterLimit>
-              <a :href="assetBase + '/products/create'" class="btn btn-primary">Добавить</a>
+              <a :href="assetBase + 'admin/products/create'" class="btn btn-primary">Добавить</a>
             </template>
             <template v-slot:actions="props">
-              <a class="fa fa-edit" href="" @click.prevent="modal.edit.show = true; modal.edit.id = props.row.id">
+              <a :href="assetBase + `admin/products/${props.row.id}/edit`">
                 <unicon name="pen" fill="royalblue"/>
               </a>
-              <a class="fa fa-edit" href="" @click.prevent="modal.delete.show = true; modal.delete.id = props.row.id">
+              <a href="" @click.prevent="modal.delete.show = true; modal.delete.id = props.row.id">
                 <unicon name="trash-alt" fill="royalblue"/>
               </a>
             </template>
           </v-client-table>
         </div>
       </div>
-      <product-create v-if="modal.create.show" @close="modal.create.show = false"></product-create>
-      <!--      <users-edit :id="modal.edit.id" v-if="modal.edit.show" @close="modal.edit.show = false"></users-edit>-->
       <!--      <users-delete :id="modal.delete.id" v-if="modal.delete.show" @close="modal.delete.show = false"></users-delete>-->
     </div>
   </div>
 </template>
 
 <script>
-  import ProductCreate from './ProductCreate';
-
   export default {
-    components: {
-      ProductCreate
-    },
+    components: {},
     data() {
-      return {
-        modal: {
-          create: {
-            show: false
-          }
-        }
-      }
+      return {}
     },
     props: {
       products: {
@@ -74,6 +62,7 @@
 
         const data = this.$store.getters['Product/getProducts'].map((product, i) => ( {
           key: i + 1,
+          id: product.product_id,
           article: product.article,
           name: product.name,
           category: product.categories[0].name,

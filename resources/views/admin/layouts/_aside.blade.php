@@ -5,7 +5,7 @@
       <ul class="menu">
         <li class="menu__item"><a href="" class="menu__link {{!request()->is('admin') ?: 'is-active'}}">Панель управления</a></li>
         <li class="menu__title">Разделы управления</li>
-        <li class="menu__item"><a href="{{ route('products.index') }}" class="menu__link menu__link--check {{!request()->is('admin/products') ?: 'is-active'}}">Продукция</a></li>
+        <li class="menu__item"><a href="{{ route('admin.products.index') }}" class="menu__link menu__link--check {{!request()->is('admin/products') ?: 'is-active'}}">Продукция</a></li>
       </ul>
     </div>
   </div>
