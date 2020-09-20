@@ -2,31 +2,32 @@
   <main>
     <div class="row">
       <div class="col-md-12">
+        <alert className="info">ID: <strong>{{ initialData.product.product_id }}</strong></alert>
+      </div>
+      <div class="col-md-12">
         <alert className="success" v-if="result.text" v-html="result.text"/>
         <alert v-for="(error, i) in errors" :key="i" v-html="error"/>
       </div>
     </div>
-    <tab :tabs="mainTabs" :activeTab.sync="activeTab" :isLoading="isLoading" :key="reset">
+    <tab :tabs="mainTabs" :activeTab.sync="activeTab" :isLoading="isLoading">
       <template v-slot:required>
         <product-edit-required
           v-bind.sync="data"
+          :category.sync="category"
+          :current-files.sync="currentFiles"
+          @removeCurrentFiles="removeCurrentFiles"
         ></product-edit-required>
       </template>
       <template v-slot:optional>
-        <product-create-optional
-          :weight.sync="data.weight"
-          :dimension.sync="data.dimension"
-          :video.sync="data.video"
-          :comment.sync="data.comment"
-          :description.sync="data.description"
-          :similar_product.sync="data.similar_product"
-        ></product-create-optional>
+        <product-edit-optional
+          v-bind.sync="data"
+        ></product-edit-optional>
       </template>
     </tab>
     <div class="text-right mt-4">
       <button class="btn btn-primary" @click="edit" :disabled="isLoading">
         <span v-show="isLoading" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
-        Добавить товар
+        Изменить
       </button>
     </div>
   </main>
@@ -34,21 +35,24 @@
 
 <script>
   import ProductEditRequired from './ProductEditRequired';
-  import ProductCreateOptional from './ProductCreateOptional';
+  import ProductEditOptional from './ProductEditOptional';
 
   export default {
     components: {
       ProductEditRequired,
-      ProductCreateOptional
+      ProductEditOptional
     },
     data() {
       return {
+        category: '',
+        currentFiles: [],
         data: {
+          id: null,
           categories: [],
           name: '',
           article: '',
           available: '',
-          price: '',
+          price: null,
           manufacturer: '',
           material: '',
           technic: '',
@@ -93,35 +97,57 @@
       }
     },
     props: {
-      categories: {
-        type: Array,
-        required: true
-      },
-      product: {
+      initialData: {
         type: Object,
         required: true
       }
     },
+    computed: {},
     mounted() {
-      this.$store.commit('Product/setCategories', this.categories);
-      this.$store.commit('Product/setProduct', this.product);
+      this.$store.commit('Product/setCategories', this.initialData.categories);
+      this.$store.commit('Product/setProducts', this.initialData.products);
+
+      const product = this.initialData.product;
+      this.data.id = product.product_id;
+      this.data.categories = product.hasOwnProperty('categories') ? product.categories.map(item => item.category_id) : [];
+      this.category = product.hasOwnProperty('categories') ? product.categories.length ? product.categories[0].name : '' : '';
+      this.data.name = product.name;
+      this.data.article = product.article;
+      this.data.available = product.available;
+      this.data.price = product.price;
+      this.data.manufacturer = product.manufacturer;
+      this.data.material = product.material;
+      this.data.technic = product.technic;
+      this.data.meta_keywords = product.meta_keywords;
+      this.data.meta_description = product.meta_description;
+      this.data.meta_title = product.meta_title;
+      this.currentFiles = product.hasOwnProperty('image_path') ? product.image_path ? product.image_path.split(';') : [] : [];
+
+      this.data.weight = product.weight;
+      this.data.dimension = product.dimension;
+      this.data.video = product.video;
+      this.data.comment = product.comment;
+      this.data.description = product.description;
+      this.data.similar_product = product.hasOwnProperty('similar_product_id') ? product.similar_product_id ? product.similar_product_id.split(';') : [] : [];
     },
     methods: {
+      removeCurrentFiles(key) {
+        this.currentFiles = this.currentFiles.filter((item, i) => i !== key);
+      },
       edit() {
-        this.$store.dispatch('Product/editProduct', this.data);
         if (this.validate()) {
-          // this.isLoading = true;
+          this.isLoading = true;
 
-          // this.$store.dispatch('Product/editProduct', this.data).then((res) => {
-          //   if (!res.hasOwnProperty('errors')) {
-          //     this.result.text = `Товар <strong>${ this.data.name }</strong> успешно создан!`;
-          //     clearTimeout(this.result.timer);
-          //     this.result.timer = setTimeout(() => this.result.text = '', 3000);
-          //     this.reset = !this.reset;
-          //   }
-          //   this.errors = res.errors;
-          //   this.isLoading = false;
-          // });
+          this.$store.dispatch('Product/editProduct', this.data).then((res) => {
+            if (!res.hasOwnProperty('errors')) {
+              this.result.text = `Товар <strong>${ this.data.name }</strong> успешно изменен!`;
+              clearTimeout(this.result.timer);
+              this.result.timer = setTimeout(() => this.result.text = '', 3000);
+              this.reset = !this.reset;
+            }
+            this.errors = res.errors;
+            this.isLoading = false;
+          });
         }
       },
       validate() {
@@ -146,7 +172,7 @@
 
         return !this.errors.length;
       }
-    },
+    }
 
   }
 </script>

@@ -17,7 +17,7 @@ Route::middleware('auth')->group(function () {
 
   Route::get('/admin', 'Admin\IndexController@index')->name('admin');
 
-  Route::resource('/admin/products', 'Admin\ProductController', ['as' => 'admin'])->only('index', 'create', 'store', 'edit', 'update');
+  Route::resource('/admin/products', 'Admin\ProductController', ['as' => 'admin'])->only('index', 'show', 'create', 'store', 'edit', 'destroy');
   Route::post('/admin/products/update', 'Admin\ProductController@update')->name('admin.products.update');
 
   /* Таблицы vue-table-2 (экспорт) */

@@ -1,4 +1,4 @@
 @extends('admin.layouts.app', ['title' => 'Редактирование товара'])
 @section('content')
-  <product-edit :categories="{{ $categories }}" :product="{{ $product }}"></product-edit>
+  <product-edit :initial-data="{{ $data }}"></product-edit>
 @endsection

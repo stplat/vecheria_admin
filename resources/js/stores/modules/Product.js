@@ -67,11 +67,11 @@ export default {
       for (let param in payload) {
         if (payload.hasOwnProperty(param)) {
           if (param === 'files') {
-            for (let file in payload['files']) {
-              if (payload['files'].hasOwnProperty(file)) {
-                formData.append('files[' + file + ']', payload[param][file]);
-              }
-            }
+            payload['files'].forEach((item, key) => {
+              typeof item === 'string'
+                ? formData.append('currentFiles[' + key + ']', item)
+                : formData.append('files[' + key + ']', item);
+            });
           } else if (param === 'categories') {
             payload['categories'].forEach((item, key) => {
               formData.append('categories[' + key + ']', item);
@@ -86,15 +86,27 @@ export default {
         }
       }
       const res = await axios.post(this.state.requestPath + '/admin/products/update', formData).catch(err => console.log('In product/editProduct - ' + err));
-      // const res = await axios.put(this.state.requestPath + '/admin/products/update', payload.files).catch(err => console.log('In product/editProduct - ' + err));
-      console.log(res)
-      // if (!res.data.errors) {
-      //   commit('setProducts', res.data);
-      //   return res.data;
-      // } else {
-      //   return { errors: Object.values(res.data.errors).map(item => item[0]) };
-      // }
-    }
+
+      if (!res.data.errors) {
+        commit('setProduct', res.data);
+        return res.data;
+      } else {
+        return { errors: Object.values(res.data.errors).map(item => item[0]) };
+      }
+    },
+
+    /* Удаление товара */
+    async deleteProduct({ commit }, payload) {
+      let { id } = payload;
+      const res = await axios.delete(this.state.requestPath + '/admin/products/' + id).catch(err => console.log('In product/deleteProduct - ' + err));
+
+      if (!res.data.errors) {
+        commit('setProducts', res.data);
+        return res.data;
+      } else {
+        return { errors: Object.values(res.data.errors).map(item => item[0]) };
+      }
+    },
   },
   mutations: {
     setProduct: (state, obj) => state.product = obj,

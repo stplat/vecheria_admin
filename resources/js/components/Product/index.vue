@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-md-12">
-      <!--          <alert :className="result.className" v-show="result.show">Пользователь <strong>{{ result.name }}</strong> успешно {{ result.text }}!</alert>-->
+      <alert className="success" v-if="result.show" v-html="result.text"/>
       <div class="card mb-1">
         <h4 class="card-header">Список продукции</h4>
         <div class="card-body product">
@@ -20,16 +20,32 @@
           </v-client-table>
         </div>
       </div>
-      <!--      <users-delete :id="modal.delete.id" v-if="modal.delete.show" @close="modal.delete.show = false"></users-delete>-->
+      <product-delete :id="modal.delete.id" v-if="modal.delete.show" @close="modal.delete.show = false" @getResult="getResult"></product-delete>
     </div>
   </div>
 </template>
 
 <script>
+  import ProductDelete from './ProductDelete';
+
   export default {
-    components: {},
+    components: {
+      ProductDelete
+    },
     data() {
-      return {}
+      return {
+        modal: {
+          delete: {
+            id: null,
+            show: false
+          }
+        },
+        result: {
+          timer: 0,
+          text: '',
+          show: false
+        }
+      }
     },
     props: {
       products: {
@@ -39,6 +55,14 @@
       categories: {
         type: Array,
         required: true
+      }
+    },
+    methods: {
+      getResult(value) {
+        this.result.text = value;
+        this.result.show = true;
+        clearTimeout(this.result.timer);
+        this.result.timer = setTimeout(() => this.result.show = false, 3000);
       }
     },
     mounted() {
@@ -65,7 +89,7 @@
           id: product.product_id,
           article: product.article,
           name: product.name,
-          category: product.categories[0].name,
+          category: product.categories.length ? product.categories[0].name : '',
           subcategories: product.categories.map(item => item.name_2st).join(', '),
           manufacturer: product.manufacturer,
           material: product.material,

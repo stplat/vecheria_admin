@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Services\Admin\ProductService;
 use App\Http\Requests\Admin\ProductStore;
+use App\Http\Requests\Admin\ProductUpdate;
 use App\Models\Product;
 
 class ProductController extends Controller
@@ -31,7 +32,8 @@ class ProductController extends Controller
     ]);
   }
 
-  public function categories() {
+  public function categories()
+  {
     return $this->productService->getCategories();
   }
 
@@ -51,7 +53,7 @@ class ProductController extends Controller
   /**
    * Store a newly created resource in storage.
    *
-   * @param \App\Http\Requests\Admin\ProductStore
+   * @param ProductStore $request
    * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
    */
   public function store(ProductStore $request)
@@ -87,11 +89,11 @@ class ProductController extends Controller
    * Display the specified resource.
    *
    * @param int $id
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
    */
   public function show($id)
   {
-    //
+    return $this->productService->getProduct($id);
   }
 
   /**
@@ -103,35 +105,64 @@ class ProductController extends Controller
   public function edit($id)
   {
     return view('admin/product-edit')->with([
-      'products' => $this->productService->getProducts(),
-      'product' => $this->productService->getProduct($id),
-      'categories' => $this->productService->getCategories()
+      'data' => collect([
+        'products' => $this->productService->getProducts(),
+        'product' => $this->productService->getProduct($id),
+        'categories' => $this->productService->getCategories()
+      ])
     ]);
   }
 
   /**
    * Update the specified resource in storage.
    *
-   * @param \Illuminate\Http\Request $request
-   * @param int $id
-   * @return \Illuminate\Http\Response
+   * @param ProductUpdate $request
+   * @return object
    */
-  public function update()
+  public function update(ProductUpdate $request)
   {
-//    $content = ob_get_contents();
-//    return request()->getContent();
-//    return request()->file('files');
-    return $this->productService->storeImage(request()->file('files'), 'asdasqwe123vxcv');
+    $id = $request->input('id');
+    $files = $request->file('files');
+    $newImagePaths = $request->input('currentFiles');
+    $slug = TransliterationHelper($request->input('name') . "-" . $request->input('article'));
+
+    $product = Product::find($id);
+    $product->update([
+      'name' => $request->input('name'),
+      'slug' => $slug,
+      'category_id' => '1',
+      'manufacturer' => $request->input('manufacturer'),
+      'article' => $request->input('article'),
+      'meta_keywords' => $request->input('meta_keywords'),
+      'meta_description' => $request->input('meta_description'),
+      'meta_title' => $request->input('meta_title'),
+      'available' => $request->input('available'),
+      'weight' => $request->input('weight'),
+      'price' => $request->input('price'),
+      'dimension' => $request->input('dimension'),
+      'comment' => $request->input('comment'),
+      'material' => $request->input('material'),
+      'technic' => $request->input('technic'),
+      'description' => $request->input('description'),
+      'video' => $request->input('video'),
+      'image_path' => $this->productService->updateImage($id, $files, $newImagePaths, $slug),
+      'similar_product_id' => $request->input('similar_product') ? implode(';', $request->input('similar_product')) : '',
+    ]);
+
+    $product->categories()->sync($request->input('categories'));
+
+    return $this->productService->getProduct($id);
   }
 
   /**
    * Remove the specified resource from storage.
    *
    * @param int $id
-   * @return \Illuminate\Http\Response
+   * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object
    */
   public function destroy($id)
   {
-    //
+    Product::destroy($id);
+    return $this->productService->getProducts();
   }
 }
