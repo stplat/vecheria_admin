@@ -78,6 +78,7 @@
 
       /* Событие изменения (загрузки) файла */
       changeFile(localFiles) {
+        this.errors = [];
         const storage = [...localFiles].map(item => {
           return this.validate(item)
             ? {
