@@ -10,7 +10,7 @@ class Product extends Model
   protected $primaryKey = 'product_id';
 
   protected $fillable = [
-    'category_id', 'name', 'manufacturer', 'slug', 'article', 'meta_keywords', 'meta_description', 'meta_title', 'available', 'weight',
+    'name', 'slug', 'category_id', 'manufacturer', 'article', 'meta_keywords', 'meta_description', 'meta_title', 'available', 'weight',
     'price', 'dimension', 'comment', 'material', 'technic', 'description', 'video', 'image_path', 'similar_product_id',
   ];
 

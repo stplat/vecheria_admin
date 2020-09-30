@@ -58,14 +58,14 @@ class ProductService
     $path = [];
 
     foreach ($files as $key => $file) {
-      $name = $key > 0 ? $name . '_' . ($key + 1) : $name;
+      $new_name = $key > 0 ? $name . '_' . ($key + 1) : $name;
       if (!is_string($file)) {
         $temp = Storage::putFile('public/images/items', $file);
 
-        $this->resizeImage($temp, $name, 'medium', null, 380);
-        $this->resizeImage($temp, $name, 'small', null, 120);
-        $this->resizeImage($temp, $name, 'thumb', 78, 78);
-        $resultPath = $this->resizeImage($temp, $name);
+        $this->resizeImage($temp, $new_name, 'medium', null, 380);
+        $this->resizeImage($temp, $new_name, 'small', null, 120);
+        $this->resizeImage($temp, $new_name, 'thumb', 78, 78);
+        $resultPath = $this->resizeImage($temp, $new_name);
 
         Storage::delete($temp);
         array_push($path, $resultPath);

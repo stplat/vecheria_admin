@@ -28,6 +28,11 @@
     },
     props: {},
     computed: {},
+    watch: {
+      localStorage() {
+        this.$emit('updateFiles', this.localStorage.map(item => item.file));
+      },
+    },
     methods: {
       removeStorage(id) {
         this.localStorage = this.localStorage.filter(item => item.id !== id);

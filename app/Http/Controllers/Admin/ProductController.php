@@ -60,27 +60,29 @@ class ProductController extends Controller
   {
     $slug = TransliterationHelper($request->input('name') . "-" . $request->input('article'));
 
-    Product::create([
-      'name' => $request->input('name'),
-      'slug' => $slug,
-      'category_id' => '1',
-      'manufacturer' => $request->input('manufacturer'),
-      'article' => $request->input('article'),
-      'meta_keywords' => $request->input('meta_keywords'),
-      'meta_description' => $request->input('meta_description'),
-      'meta_title' => $request->input('meta_title'),
-      'available' => $request->input('available'),
-      'weight' => $request->input('weight'),
-      'price' => $request->input('price'),
-      'dimension' => $request->input('dimension'),
-      'comment' => $request->input('comment'),
-      'material' => $request->input('material'),
-      'technic' => $request->input('technic'),
-      'description' => $request->input('description'),
-      'video' => $request->input('video'),
-      'image_path' => $this->productService->storeImage($request->file('files'), $slug),
-      'similar_product_id' => $request->input('similar_product') ? implode(';', $request->input('similar_product')) : '',
-    ])->categories()->attach($request->input('categories'));
+    $product = new Product;
+    $product->name = $request->input('name');
+    $product->slug = $slug;
+    $product->category_id = 1;
+    $product->manufacturer = $request->input('manufacturer');
+    $product->article = $request->input('article');
+    $product->meta_keywords = $request->input('meta_keywords');
+    $product->meta_description = $request->input('meta_description');
+    $product->meta_title = $request->input('meta_title');
+    $product->available = $request->input('available');
+    $product->weight = $request->input('weight');
+    $product->price = $request->input('price');
+    $product->dimension = $request->input('dimension');
+    $product->comment = $request->input('comment');
+    $product->material = $request->input('material');
+    $product->technic = $request->input('technic');
+    $product->description = $request->input('description');
+    $product->video = $request->input('video');
+    $product->image_path = $this->productService->storeImage($request->file('files'), $slug);
+    $product->similar_product_id = $request->input('similar_product') ? implode(';', $request->input('similar_product')) : '';
+
+    $product->save();
+    $product->categories()->attach($request->input('categories'));
 
     return $this->productService->getProducts();
   }
