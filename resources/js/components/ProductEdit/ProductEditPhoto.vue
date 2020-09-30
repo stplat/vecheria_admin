@@ -18,7 +18,7 @@
         </li>
         <li class="form-image__upload">
           <label for="file" class="form-image__plus"><span></span></label>
-          <input id="file" type="file" multiple hidden @change="changeFile($event.target.files)">
+          <input id="file" type="file" multiple hidden @change="changeFile($event.target)">
         </li>
       </ul>
     </div>
@@ -77,9 +77,9 @@
       },
 
       /* Событие изменения (загрузки) файла */
-      changeFile(localFiles) {
+      changeFile(e) {
         this.errors = [];
-        const storage = [...localFiles].map(item => {
+        const storage = [...e.files].map(item => {
           return this.validate(item)
             ? {
               file: item,
@@ -93,6 +93,8 @@
           item.id = key;
           return item;
         });
+
+        e.value = '';
       }
     }
   }

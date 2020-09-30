@@ -14,7 +14,7 @@
         <div class="col-md-6">
           <div class="form-group" v-if="category">
             <label for="subcategory" class="text-muted"><strong>Подкатегория:</strong></label>
-            <select class="form-control" multiple id="subcategory" @change="$emit('update:categories', subcategory)" v-model="subcategory">
+            <select class="form-control" multiple id="subcategory" v-model="subcategory">
               <option disabled value>Выберите один из вариантов</option>
               <option :value="subcategory.category_id" v-for="(subcategory, key) in subcategories" :key="key">{{ subcategory.name_2st }}</option>
             </select>
@@ -93,6 +93,11 @@
       return {
         subcategory: [],
         category: '',
+      }
+    },
+    watch: {
+      subcategory() {
+      this.$emit('update:categories', this.subcategory);
       }
     },
     methods: {
