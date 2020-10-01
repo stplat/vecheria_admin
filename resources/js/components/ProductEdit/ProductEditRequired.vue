@@ -23,16 +23,6 @@
                 <label :for="'subcategory_' + item.category_id" >{{ item.name_2st }}</label>
               </li>
             </ul>
-<!--            <label for="subcategory" class="text-muted"><strong>Подкатегория:</strong></label>-->
-<!--            <select class="form-control" multiple id="subcategory" v-model="subcategory" @input="$emit('update:categories', subcategory)">-->
-<!--              <option disabled value>Выберите один из вариантов</option>-->
-<!--              <option v-for="(item, key) in allSubcategories"-->
-<!--                      :value="item.category_id"-->
-<!--                      :key="key"-->
-<!--                      :hidden="!item.hidden"-->
-<!--                      @click="$emit('update:categories', [$event.target.value])">{{ item.name_2st }}-->
-<!--              </option>-->
-<!--            </select>-->
           </div>
         </div>
       </div>
