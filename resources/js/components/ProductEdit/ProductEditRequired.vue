@@ -13,11 +13,26 @@
         </div>
         <div class="col-md-6">
           <div class="form-group" v-show="category">
-            <label for="subcategory" class="text-muted"><strong>Подкатегория:</strong></label>
-            <select class="form-control" multiple id="subcategory" v-model="subcategory" @input="$emit('update:categories', subcategory)">
-              <option disabled value>Выберите один из вариантов</option>
-              <option :value="item.category_id" v-for="(item, key) in allSubcategories" :key="key" :hidden="!item.hidden">{{ item.name_2st }}</option>
-            </select>
+            <div class="text-muted"><strong>Подкатегория:</strong></div>
+            <ul class="form-select-multi">
+              <li v-for="(item, key) in allSubcategories" :key="key" :hidden="!item.hidden">
+                <input type="checkbox"
+                       :id="'subcategory_' + item.category_id"
+                       :value="item.category_id"
+                       v-model="subcategory">
+                <label :for="'subcategory_' + item.category_id" >{{ item.name_2st }}</label>
+              </li>
+            </ul>
+<!--            <label for="subcategory" class="text-muted"><strong>Подкатегория:</strong></label>-->
+<!--            <select class="form-control" multiple id="subcategory" v-model="subcategory" @input="$emit('update:categories', subcategory)">-->
+<!--              <option disabled value>Выберите один из вариантов</option>-->
+<!--              <option v-for="(item, key) in allSubcategories"-->
+<!--                      :value="item.category_id"-->
+<!--                      :key="key"-->
+<!--                      :hidden="!item.hidden"-->
+<!--                      @click="$emit('update:categories', [$event.target.value])">{{ item.name_2st }}-->
+<!--              </option>-->
+<!--            </select>-->
           </div>
         </div>
       </div>
@@ -110,7 +125,7 @@
       meta_keywords: { type: String },
       meta_description: { type: String },
       meta_title: { type: String },
-      currentFiles: { type: Array },
+      currentFiles: { type: Array }
     },
     methods: {
       removeCurrentFiles(key) {
@@ -129,6 +144,9 @@
       }
     },
     watch: {
+      subcategory() {
+        this.$emit('update:categories', this.subcategory);
+      },
       categories() {
         this.subcategory = this.categories;
       },

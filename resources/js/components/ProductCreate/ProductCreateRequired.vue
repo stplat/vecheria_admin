@@ -13,11 +13,16 @@
         </div>
         <div class="col-md-6">
           <div class="form-group" v-if="category">
-            <label for="subcategory" class="text-muted"><strong>Подкатегория:</strong></label>
-            <select class="form-control" multiple id="subcategory" v-model="subcategory">
-              <option disabled value>Выберите один из вариантов</option>
-              <option :value="subcategory.category_id" v-for="(subcategory, key) in subcategories" :key="key">{{ subcategory.name_2st }}</option>
-            </select>
+            <div class="text-muted"><strong>Подкатегория:</strong></div>
+            <ul class="form-select-multi">
+              <li v-for="(item, key) in subcategories" :key="key">
+                <input type="checkbox"
+                       :id="'subcategory_' + item.category_id"
+                       :value="item.category_id"
+                v-model="subcategory">
+                <label :for="'subcategory_' + item.category_id" >{{ item.name_2st }}</label>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -92,18 +97,21 @@
     data() {
       return {
         subcategory: [],
-        category: '',
+        category: ''
       }
     },
     watch: {
       subcategory() {
-      this.$emit('update:categories', this.subcategory);
+        this.$emit('update:categories', this.subcategory);
       }
     },
     methods: {
+      changeSubcategory(e) {
+        console.log(window.getSelection())
+      },
       updateFiles(value) {
         this.$emit('update:files', value)
-      },
+      }
     },
     computed: {
       categories() {
