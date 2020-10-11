@@ -97,6 +97,7 @@
               this.result.text = `Товар <strong>${ this.data.name }</strong> успешно создан!`;
               clearTimeout(this.result.timer);
               this.result.timer = setTimeout(() => this.result.text = '', 3000);
+              this.resetData();
               this.reset = !this.reset;
             }
             this.errors = res.errors;
