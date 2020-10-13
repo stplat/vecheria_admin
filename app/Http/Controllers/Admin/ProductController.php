@@ -25,7 +25,7 @@ class ProductController extends Controller
    */
   public function index()
   {
-//    dd($this->productService->getProducts()->toArray());
+//    dd(Product::where('product_id', 1)->first()->toArray()['image_path'] ?? []);
     return view('admin/product')->with([
       'products' => $this->productService->getProducts(),
       'categories' => $this->productService->getCategories()
@@ -58,7 +58,7 @@ class ProductController extends Controller
    */
   public function store(ProductStore $request)
   {
-    $slug = TransliterationHelper($request->input('name') . "-" . $request->input('article'));
+    $slug = TransliterationHelper($request->input('name'), $request->input('article'));
 
     $product = new Product;
     $product->name = $request->input('name');
@@ -126,7 +126,7 @@ class ProductController extends Controller
     $id = $request->input('id');
     $files = $request->file('files');
     $newImagePaths = $request->input('currentFiles');
-    $slug = TransliterationHelper($request->input('name') . "-" . $request->input('article'));
+    $slug = TransliterationHelper($request->input('name'), $request->input('article'));
 
     $product = Product::find($id);
     $product->update([
@@ -164,6 +164,7 @@ class ProductController extends Controller
    */
   public function destroy($id)
   {
+    $this->productService->deleteImage($id);
     Product::destroy($id);
     return $this->productService->getProducts();
   }
